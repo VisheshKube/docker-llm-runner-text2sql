@@ -1,0 +1,49 @@
+
+services:
+  api:
+    build: .
+    env_file:
+      - .env
+    container_name: text2sql_api
+    depends_on:
+      model-runner:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://model-runner:11434
+      OLLAMA_MODEL: mistral:latest
+      PYTHONPATH: /app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data:rw
+      - ./tests:/app/tests:rw
+      - ./results:/app/results:rw
+    command: >
+      uvicorn api.views.service:app --host 0.0.0.0 --port 8000
+
+  model-runner:
+    image: ollama/ollama:latest
+    container_name: model-runner
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "bash", "-lc", "ollama list | grep -q 'mistral:latest'"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+  cli:
+    build: .
+    container_name: ai_data_cli
+    depends_on:
+      - api
+    entrypoint: ["python", "CLI/cli.py"]
+    environment:
+      - API_URL=http://api:8000/query
+    tty: true
+    stdin_open: true
+
+
+volumes:
+  ollama_data:

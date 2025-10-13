@@ -1,0 +1,33 @@
+tables:
+  customers:
+    description: Stores customer information
+    columns:
+      id: Unique ID for each customer
+      name: Full name of the customer
+      city: City where the customer lives
+
+  orders:
+    description: Stores purchase orders
+    columns:
+      id: Unique ID for each order
+      customer_id: Foreign key to customers.id
+      product_id: Foreign key to products.id
+      order_date: Date when the order was placed (YYYY-MM-DD)
+      total: Total amount for the order
+
+  products:
+    description: Stores product catalog
+    columns:
+      id: Unique ID for each product
+      name: Name of the product
+      category: Product category
+      price: Price of the product
+
+joins:
+  - customers.id = orders.customer_id
+  - products.id = orders.product_id
+
+allowed_tables:
+  - customers
+  - orders
+  - products

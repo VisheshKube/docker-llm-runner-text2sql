@@ -1,0 +1,52 @@
+tests:
+  - question: "List all products in the Electronics category"
+    keywords: ["products", "category", "electronics"]
+
+  - question: "Show all customers from New York"
+    keywords: ["customers", "city", "new york"]
+
+  - question: "How many orders were placed in 2023?"
+    keywords: ["orders", "count", "2023"]
+
+  - question: "Get the top 5 customers by total spend"
+    keywords: ["customers", "top", "sum", "orders"]
+
+  - question: "Which products were most frequently ordered?"
+    keywords: ["products", "orders", "count"]
+
+  - question: "Show revenue from sales in July 2023"
+    keywords: ["orders", "sum", "2023"]
+
+  - question: "Which city has the most customers?"
+    keywords: ["customers", "city", "count"]
+
+  - question: "List all orders in September 2024"
+    keywords: ["orders", "2024", "09"]
+
+  - question: "Find the average price of products in Furniture"
+    keywords: ["products", "avg", "price", "furniture"]
+
+  - question: "Show all orders along with customer names"
+    keywords: ["orders", "customers", "join"]
+
+  - question: "List the total sales revenue for Electronics products"
+    keywords: ["orders", "products", "sum", "electronics"]
+
+  - question: "How many unique customers placed orders in 2024?"
+    keywords: ["customers", "orders", "count", "distinct", "2024"]
+
+  - question: "Get the product with the highest price"
+    keywords: ["products", "price", "max"]
+
+synonyms:
+  products: ["p", "product", "items"]
+  customers: ["c", "customer", "clients", "users"]
+  orders: ["o", "order", "purchases", "transactions"]
+  employees: ["e", "emp", "staff"]
+  city: ["location", "town"]
+  sum: ["total", "revenue", "amount"]
+  count: ["number", "how many", "frequency"]
+  avg: ["average", "mean"]
+  max: ["highest", "top"]
+  min: ["lowest", "smallest"]
+  join: ["merge", "combine"]

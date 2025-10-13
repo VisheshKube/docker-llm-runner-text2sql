@@ -1,0 +1,5 @@
+backend,model,correct_count,total,avg_latency_ms,soft_accuracy_%
+huggingface,Qwen/Qwen3-Next-80B-A3B-Instruct:novita,13.0,13,1148.61,100.0
+huggingface,meta-llama/Llama-3.1-8B-Instruct:nebius,13.0,13,705.61,100.0
+huggingface,openai/gpt-oss-120b:nebius,13.0,13,1392.24,100.0
+ollama,mistral:latest,13.0,13,6805.89,100.0
