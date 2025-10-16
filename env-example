@@ -1,0 +1,13 @@
+
+# Hugging Face (cloud)
+# If you want to use multiple models, separate them with commas
+HF_MODELS=meta-llama/Llama-3.1-8B-Instruct:nebius,openai/gpt-oss-120b:nebius,Qwen/Qwen3-Next-80B-A3B-Instruct:novita
+
+# If you want to use a private model, uncomment and set your token below
+# HF_API_TOKEN="YOUR_HF_API_TOKEN_HERE"
+
+# Ollama (docker runner)
+OLLAMA_MODELS=mistral:latest
+OLLAMA_HOST=http://model-runner:11434
+
+LOG_PROMPT=False

@@ -1,49 +1,57 @@
-
 services:
+# Service for the FastAPI application
   api:
-    build: .
-    env_file:
-      - .env
+    build: . # Use the current directory for the Dockerfile
     container_name: text2sql_api
     depends_on:
       model-runner:
-        condition: service_healthy
-    environment:
+        condition: service_healthy # Ensure model-runner is healthy before starting api
+    environment:    # Environment variables for the API service
       OLLAMA_HOST: http://model-runner:11434
       OLLAMA_MODEL: mistral:latest
       PYTHONPATH: /app
     ports:
-      - "8000:8000"
-    volumes:
+      - "8000:8000" # Mapping port 8000 of the container to port 8000 on the host
+    volumes: # Mounting local directories to the container
       - ./data:/app/data:rw
       - ./tests:/app/tests:rw
-      - ./results:/app/results:rw
-    command: >
+      - ./results:/app/results:rw 
+    command: > # Command to run the FastAPI application
       uvicorn api.views.service:app --host 0.0.0.0 --port 8000
 
   model-runner:
-    image: ollama/ollama:latest
+    image: ollama/ollama:latest # Using the official Ollama image
     container_name: model-runner
+    restart: unless-stopped
     ports:
       - "11434:11434"
     volumes:
-      - ollama_data:/root/.ollama
-    healthcheck:
-      test: ["CMD", "bash", "-lc", "ollama list | grep -q 'mistral:latest'"]
+      - ollama_data:/root/.ollama # Persist Ollama data
+    entrypoint: # Override the default entrypoint to run Ollama server and pull model
+      - /bin/sh
+      - -c
+    command: # Command to start Ollama server and pull the model
+      - |
+        ollama serve &
+        sleep 10
+        ollama pull mistral:latest || true
+        tail -f /dev/null
+    healthcheck: # Healthcheck to ensure the model is available
+      test: ["CMD-SHELL", "ollama list | grep -q 'mistral:latest'"] # Check if the model is listed
       interval: 30s
-      timeout: 5s
+      timeout: 10s
       retries: 5
+
   cli:
     build: .
     container_name: ai_data_cli
-    depends_on:
+    depends_on: # Ensure CLI starts after the API service
       - api
     entrypoint: ["python", "CLI/cli.py"]
-    environment:
+    environment: # Environment variable for the CLI service
       - API_URL=http://api:8000/query
-    tty: true
-    stdin_open: true
-
+    tty: true # Allocate a pseudo-TTY for interactive use
+    stdin_open: true # Keep the container running for interactive use
 
 volumes:
-  ollama_data:
+  ollama_data: # Named volume for Ollama data persistence
