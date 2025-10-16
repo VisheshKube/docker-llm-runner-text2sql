@@ -14,20 +14,22 @@ from api.controllers.main import run_pipeline
 
 @pytest.mark.parametrize("sql", [
     "SELECT * FROM customers",
-    "SELECT name, city FROM customers WHERE city='New York'",
+    "SELECT name, city FROM customers WHERE city='Denver'",
     "SELECT c.name, SUM(o.total) as total_spent FROM customers c "
     "JOIN orders o ON c.id=o.customer_id GROUP BY c.name LIMIT 5"
 ])
 def test_pipeline_various_queries(sql):
     """Ensure different valid queries pass firewall and run in DB."""
     schema = load_schema()
-
+    print (f"Testing SQL: {sql}")
     # Firewall validation
     ok, reason = validate_sql(sql, schema["allowed_tables"])
     assert ok, f"Firewall blocked query: {reason}"
 
     # DB execution
+    
     result, status = run_sql_ro(sql)
+    print(f"Result: {result}, Status: {status}")
     assert status == "OK"
     assert isinstance(result, (pd.DataFrame, list))
     assert len(result) > 0
